@@ -3,7 +3,7 @@
 # Version 1.0 ( Alpha )
 # Copyright (c)2019 - Afrizal F.A - IN CRUST WE RUSH
 
-import os, re, sys, socket
+import os, re, sys, socket, urllib
 
 port=int(sys.argv[1])
 
@@ -23,7 +23,8 @@ while True :
 		if os.path.isfile("index.php") :
 			open_file=["index.php"]
 	if open_file :
-		split_ext=open_file[0].split(".")[-1]
+		inputopen=urllib.unquote(open_file[0])
+		split_ext=inputopen.split(".")[-1]
 	else :
 		content_type="text/html"
 	if str(split_ext) :
@@ -44,15 +45,15 @@ while True :
 	h_notfound="""\nHTTP/1.1 404 Not Found\nServer: SlowlyByte ( IN CRUST WE RUSH )\nConnection: Close\nContent-Type: text/html\n\n404 Not Found"""
 	try :
 		if open_file :
-			if os.path.isfile(open_file[0]) :
-				file_content=open(open_file[0], "r").read()
+			if os.path.isfile(inputopen) :
+				file_content=open(inputopen, "r").read()
 				c.sendall(h_ok+file_content)
-			elif os.path.isdir(open_file[0]) :
-				if os.path.isfile(open_file[0]+"/index.html") :
-					open_file=[open_file[0]+"/index.html"]
-				if os.path.isfile(open_file[0]+"/index.php") :
-					open_file=[open_file[0]+"/index.php"]
-				c.sendall("HTTP/1.1 200 OK\nServer: SlowlyByte ( IN CRUST WE RUSH )\nConnection: Close\nContent-Type: text/html\n\n"+open(open_file[0], "r").read())
+			elif os.path.isdir(inputopen) :
+				if os.path.isfile(inputopen+"/index.html") :
+					open_file=[inputopen+"/index.html"]
+				if os.path.isfile(inputopen+"/index.php") :
+					open_file=[inputopen+"/index.php"]
+				c.sendall("HTTP/1.1 200 OK\nServer: SlowlyByte ( IN CRUST WE RUSH )\nConnection: Close\nContent-Type: text/html\n\n"+open(inputopen, "r").read())
 			else :
 				c.sendall(h_notfound)
 		else :
